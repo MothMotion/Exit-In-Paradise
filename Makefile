@@ -25,9 +25,14 @@ $(TARGET_DIR)$(TARGET): $(OBJ)
 	mkdir -p $(TARGET_DIR)
 	$(GCC) $(GCC_FLAGS) -o $@ $^
 
+DEP := $(parsubst $(OBJ_DIR)%.o, $(OBJ_DIR)%.d, $(OBJ))
+-include $(DEP)
+DEPFLAGS = -MMD -MF $(@:.o=.d)
+
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	@echo -e "Compiling $@"
-	$(GCC) $(GCC_FLAGS) -o $@ -c $<
+	mkdir -p $(OBJ_DIR)
+	$(GCC) $(GCC_FLAGS) -o $@ -c $< $(DEPFLAGS)
 
 clean:
 	rm $(OBJ_DIR)*.o
