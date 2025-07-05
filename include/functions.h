@@ -5,15 +5,16 @@
 
 
 #include "matrix.h"
+#include "simple_matrix.h"
 
 #include <forward_list>
 #include <cstdint>
 
 
 
-Matrix minimize(const SimpleMatrix& inp_matrix);
+Matrix minimize(SimpleMatrix& inp_matrix);
 
-Matrix simplify(const SimpleMatrix& inp_matrix);
+Matrix simplify(SimpleMatrix& inp_matrix);
 
 
 

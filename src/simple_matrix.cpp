@@ -2,6 +2,7 @@
 #include "matrix.h"
 
 #include <cstdint>
+#include <iostream>
 #include <iterator>
 
 
@@ -36,13 +37,12 @@ SimpleMatrix::SimpleMatrix(Matrix& m) {
   _data = new uint16_t*[_size_h];
   
   uint32_t j = 0;
-  uint32_t temp_size = 0;
   for(Matrix::iterator i=m.begin(); i != m.end(); ++i, ++j) {
     _data[j] = new uint16_t[_size_w + m.valSize()];
 
     // Fill up ticks
-    temp_size = _size_w;
-    for(std::forward_list<uint16_t>::iterator k = i->ticks.begin(); k != i->ticks.end(); ++k, --temp_size)
+    uint16_t temp_size = _size_w;
+    for(std::deque<uint16_t>::iterator k = i->ticks.begin(); k != i->ticks.end(); ++k, --temp_size)
       _data[j][_size_w - temp_size] = *k;
     while(temp_size != 1)
       _data[j][_size_w - temp_size] = 0;
@@ -53,4 +53,20 @@ SimpleMatrix::SimpleMatrix(Matrix& m) {
   }
 
   _size_w += m.valSize();
+}
+
+SimpleMatrix::~SimpleMatrix() {
+  for(uint32_t i=0; i<_size_h; ++i) {
+    delete[] _data[i];
+    _data[i] = nullptr;
+  }
+  delete[] _data;
+}
+
+const void SimpleMatrix::print() const {
+  for(uint32_t i=0; i<_size_h; ++i) {
+    for(uint32_t j=0; j<_size_w; ++j)
+      std::cout << _data[i][j] << " ";
+    std::cout << "\n";
+  }
 }

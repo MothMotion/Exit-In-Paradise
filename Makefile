@@ -13,11 +13,11 @@ SRC = $(wildcard $(SRC_DIR)*.cpp)
 OBJ = $(patsubst $(SRC_DIR)%.cpp, $(OBJ_DIR)%.o, $(SRC))
 
 GCC = g++
-GCC_FLAGS = -Wall -Wextra
+GCC_FLAGS = -Wall -Wextra -Iinclude
 
 .PHONY: build clean check
 
-build: $(TARGET)
+build: $(TARGET_DIR)$(TARGET)
 	@echo "Build complete!"
 
 $(TARGET_DIR)$(TARGET): $(OBJ)
@@ -36,9 +36,9 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 
 clean:
 	rm $(OBJ_DIR)*.o
-	@echo "Build cleaned!"
+	@echo "Objects cleaned!"
 
 check:
 	@echo -e "Starting checking..."
-	cppcheck --enable=all --inconclusive --library=posix --quiet ./
+	cppcheck --enable=all --inconclusive --library=posix --quiet ./ -I ./include/
 	@echo -e "Checking done!"

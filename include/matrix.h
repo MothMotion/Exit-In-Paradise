@@ -5,7 +5,7 @@
 
 
 #include <cstdint>
-#include <forward_list>
+#include <deque>
 
 
 
@@ -14,26 +14,32 @@ class SimpleMatrix;
 class Matrix {
 public:
   typedef struct MatrixCellStruct {
-    std::forward_list<uint16_t> ticks;
-    int16_t values[];
+    std::deque<uint16_t> ticks = {};
+    int16_t* values = nullptr;
   } Cell;
 
-  typedef std::forward_list<Cell>::iterator iterator;
+  typedef std::deque<Cell>::iterator iterator;
 private:
-  std::forward_list<Cell> _rows;
+  std::deque<Cell> _rows = {};
   uint32_t _val_size = 0;
 
 public:
   // Преобразовать простую матрицу.
   Matrix(SimpleMatrix& sm);
+  Matrix(const uint32_t& val_size);
+  ~Matrix();
 
   inline const bool empty() const {return _rows.empty();}
 
-  inline std::forward_list<Cell>& rows() {return _rows;}
-  inline const uint32_t valSize() const {return _val_size;}
+  void push(const std::deque<uint16_t>& ticks, const int16_t* const values);
 
-  inline std::forward_list<Cell>::iterator begin() {return _rows.begin();}
-  inline std::forward_list<Cell>::iterator end() {return _rows.end();}
+  inline std::deque<Cell>& rows() {return _rows;}
+  inline const uint32_t& valSize() const {return _val_size;}
+
+  const void print();
+
+  inline std::deque<Cell>::iterator begin() {return _rows.begin();}
+  inline std::deque<Cell>::iterator end() {return _rows.end();}
 
   inline operator bool() const {return !_rows.empty();}
 };

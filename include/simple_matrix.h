@@ -25,8 +25,13 @@ public:
 
   inline const bool empty() const {return _data == nullptr;}
 
+  inline const uint32_t& sizeH() const {return _size_h;}
+  inline const uint32_t& sizeW() const {return _size_w;}
+
   // Возвращает указанную строку матрицы.
   inline uint16_t* operator[](const uint32_t& size_h) {return _data[size_h];}
+
+  const void print() const;
 
   inline operator bool() const {return _data;}
 };
