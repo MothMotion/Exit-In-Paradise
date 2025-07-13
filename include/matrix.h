@@ -36,12 +36,17 @@ public:
 
   const void print();
 
+  inline const size_t size() const {return _rows.size();}
+
   inline iterator begin() {return _rows.begin();}
   inline iterator end() {return _rows.end();}
   inline const_iterator begin() const {return _rows.begin();}
   inline const_iterator end() const {return _rows.end();}
 
   inline operator bool() const {return !_rows.empty();}
+
+  inline const Row& operator[](const uint32_t& pos) const {return _rows[pos];}
+  inline Row& operator[](const uint32_t& pos) {return _rows[pos];}
 };
 
 
