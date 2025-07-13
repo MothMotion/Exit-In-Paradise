@@ -1,55 +1,42 @@
 #include "functions.h"
+#include "matrix.h"
+#include "config.h"
 
+#include <cstdint>
 #include <unordered_map>
-#include <unordered_set>
 
 
 
-Matrix minimize(SimpleMatrix& inp_matrix) {
-  Matrix pre_matrix = simplify(inp_matrix);
-  Matrix result(inp_matrix.sizeW()-3);
-
-  return pre_matrix;
+Matrix minimize(const Matrix& in) {
+  return simplify(in);
 }
 
-Matrix simplify(SimpleMatrix& inp_matrix) {
-  Matrix result(inp_matrix.sizeW()-3);
-  std::unordered_map<uint16_t, uint8_t> count_map;
-  for(uint32_t i=1; i<5; ++i)
-    count_map[i] = 2;
+Matrix simplify(const Matrix& in) {
+  Matrix result;
 
-  // Fill up count map with values
-  for(uint32_t i=0; i<inp_matrix.sizeH(); ++i)
-    for(uint32_t j=1; j<inp_matrix.sizeW()-2; ++j)
-      if(count_map[inp_matrix[i][j]])
-        ++count_map[inp_matrix[i][j]];
+  std::unordered_map<uint16_t, uint16_t> repeats;
+
+  for(Matrix::const_iterator i=in.begin(); i != in.begin()+RESULT_MATRIX_SIZE; ++i) {
+    for(std::deque<int16_t>::const_iterator j = i->values.begin(); j != i->values.end()-FUNCTION_Z_OUTPUT_SIZE; ++j) {
+      if(repeats[*j])
+        ++repeats[*j];
       else
-       count_map[inp_matrix[i][j]] = 1;
-
-  // Simplify matrix
-  std::unordered_set<uint16_t> exluded;
-  // Cell parameters;
-  std::deque<uint16_t> temp_ticks;
-  int16_t* temp_values = new int16_t[result.valSize()];
-
-  for(uint32_t i=0; i<inp_matrix.sizeH(); ++i) {
-    // if we already imported this tick in group.
-    if(exluded.find(inp_matrix[i][0]) != exluded.end())
-      continue; 
-
-    for(uint32_t j=1; j<inp_matrix.sizeH()-2; ++j) {
-      temp_values[j-1] = inp_matrix[i][j];
-      if(count_map[inp_matrix[i][j]] == 2 || inp_matrix[i][j] == inp_matrix[i][0]) {
-        temp_values[j-1] *= -1;
-        temp_ticks.push_back(inp_matrix[i][j]);
-        exluded.insert(inp_matrix[i][j]);
-      }
+        repeats[*j] = 1;
     }
-    result.push(temp_ticks, temp_values);
-    temp_ticks.clear();
-    temp_values = new int16_t[result.valSize()];
   }
-  delete[] temp_values;
 
+  Matrix::Row temp;
+  for(Matrix::const_iterator i=in.begin(); i != in.begin()+RESULT_MATRIX_SIZE; ++i) {
+    temp.ticks = i->ticks; 
+    for(std::deque<int16_t>::const_iterator j = i->values.begin(); j != i->values.end()-FUNCTION_Z_OUTPUT_SIZE; ++j) {
+      if(*j == i->ticks[0] || repeats[*j] == 1)
+        temp.values.push_back(- *j);
+      else
+        temp.values.push_back(*j);
+    }
+    result.push_back(temp);
+    temp.clear();
+  }
+  
   return result;
 }

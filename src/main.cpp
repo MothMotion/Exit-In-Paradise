@@ -1,7 +1,7 @@
 #include "functions.h"
-#include "simple_matrix.h"
 #include "matrix.h"
 
+#include <cstdint>
 #include <iostream>
 #include <cstdlib>
 
@@ -23,13 +23,26 @@ int main (int argc, char *argv[]) {
     return -2;
   }
 
-  SimpleMatrix inp_matrix(size_h, size_w);
+  Matrix input_matrix;
+  Matrix::Row temp;
 
-  for(uint32_t i=0; i<size_h; ++i)
-    for(uint32_t j=0; j<size_w; ++j)
-      inp_matrix[i][j] = std::atoi(argv[3 + i*size_h + j]);
+  std::cout << "Filling input matrix\n";
 
-  Matrix result = minimize(inp_matrix);
+  for(uint32_t i=0; i<size_h; ++i) {
+    temp.ticks.push_back( (uint16_t)std::atoi(argv[3 + i*size_h]) );
+    for(uint32_t j=1; j<size_w; ++j)
+      temp.values.push_back( std::atoi(argv[3 + i*size_h + j]) );
+    input_matrix.push_back(temp);
+    temp.clear();
+  }
+
+  std::cout << "Input matrix filled\n";
+  input_matrix.print();
+
+
+  std::cout << "Minimizing\n";
+  Matrix result = minimize(input_matrix);
+  std::cout << "Minimizing done\n";
 
   result.print();
 

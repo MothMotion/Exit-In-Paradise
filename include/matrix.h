@@ -13,33 +13,33 @@ class SimpleMatrix;
 
 class Matrix {
 public:
-  typedef struct MatrixCellStruct {
+  typedef struct MatrixRowStruct {
     std::deque<uint16_t> ticks = {};
-    int16_t* values = nullptr;
-  } Cell;
+    std::deque<int16_t> values = {};
 
-  typedef std::deque<Cell>::iterator iterator;
+    // Clears row's deques w/o touching pointers
+    inline void clear() {ticks.clear(); values.clear();}
+  } Row;
+
+  typedef std::deque<Row>::iterator iterator;
+  typedef std::deque<Row>::const_iterator const_iterator;
 private:
-  std::deque<Cell> _rows = {};
-  uint32_t _val_size = 0;
+  std::deque<Row> _rows = {};
 
 public:
-  // Преобразовать простую матрицу.
-  Matrix(SimpleMatrix& sm);
-  Matrix(const uint32_t& val_size);
-  ~Matrix();
-
   inline const bool empty() const {return _rows.empty();}
 
-  void push(const std::deque<uint16_t>& ticks, const int16_t* const values);
+  inline void push_back(const std::deque<uint16_t>& ticks, const std::deque<int16_t>& values) {_rows.push_back({ticks, values});}
+  inline void push_back(const Row& row_value) {_rows.push_back(row_value);};
 
-  inline std::deque<Cell>& rows() {return _rows;}
-  inline const uint32_t& valSize() const {return _val_size;}
+  inline std::deque<Row>& rows() {return _rows;}
 
   const void print();
 
-  inline std::deque<Cell>::iterator begin() {return _rows.begin();}
-  inline std::deque<Cell>::iterator end() {return _rows.end();}
+  inline iterator begin() {return _rows.begin();}
+  inline iterator end() {return _rows.end();}
+  inline const_iterator begin() const {return _rows.begin();}
+  inline const_iterator end() const {return _rows.end();}
 
   inline operator bool() const {return !_rows.empty();}
 };
