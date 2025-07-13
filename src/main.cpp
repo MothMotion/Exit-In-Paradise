@@ -2,6 +2,7 @@
 #include "matrix.h"
 
 #include <cstdint>
+#include <cstdio>
 #include <iostream>
 #include <cstdlib>
 
@@ -29,9 +30,10 @@ int main (int argc, char *argv[]) {
   std::cout << "Filling input matrix\n";
 
   for(uint32_t i=0; i<size_h; ++i) {
-    temp.ticks.push_back( (uint16_t)std::atoi(argv[3 + i*size_h]) );
+    temp.ticks.push_back( (uint16_t)std::atoi(argv[3 + i*size_w]) );
     for(uint32_t j=1; j<size_w; ++j)
-      temp.values.push_back( std::atoi(argv[3 + i*size_h + j]) );
+      temp.values.push_back( std::atoi(argv[3 + i*size_w + j]) );
+
     input_matrix.push_back(temp);
     temp.clear();
   }
