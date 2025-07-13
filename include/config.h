@@ -7,9 +7,9 @@
 
 
 
-// Size of minimized matrix
+// Размер, до которого уменьшаем.
 constexpr uint8_t RESULT_MATRIX_SIZE = 4;
-// Size of Z output, in current task there is 2: Z1 and Z2.
+// Размер вывода Z. Обрезает справа указанное количество ячеек.
 constexpr uint8_t FUNCTION_Z_OUTPUT_SIZE = 2;
 
 #endif // !CONFIG_H

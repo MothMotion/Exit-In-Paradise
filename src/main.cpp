@@ -2,21 +2,23 @@
 #include "matrix.h"
 
 #include <cstdint>
-#include <cstdio>
 #include <iostream>
 #include <cstdlib>
 
 
 
 int main (int argc, char *argv[]) {
+  // Если аргументов меньше минимума.
   if(argc <= 3) {
     std::cerr << "Invalid format: [size_h] [size_w] [matrix_0_0] [matrix_0_1] ...\n";
     return -1;
   }
 
+  // Читаем размеры матрицы.
   uint32_t size_h = std::atoi(argv[1]);
   uint32_t size_w = std::atoi(argv[2]);
 
+  // Считаем количество аргументов.
   if(argc != 3 + size_h * size_w) {
     std::cout << "size_h: " << size_h << " size_w: " << size_w << "\n";
     std::cout << "argc: " << argc << "\t size_h*size_w: " << size_h * size_w << "\n";
@@ -29,6 +31,7 @@ int main (int argc, char *argv[]) {
 
   std::cout << "Filling input matrix\n";
 
+  // Заполняем матрицу. Первое значение всегда тик.
   for(uint32_t i=0; i<size_h; ++i) {
     temp.ticks.push_back( (uint16_t)std::atoi(argv[3 + i*size_w]) );
     for(uint32_t j=1; j<size_w; ++j)
